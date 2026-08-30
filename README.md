@@ -1,4 +1,4 @@
-# hackathon1
+# SIH Hackathon
  Campus Bite
 
 Campus Bite is a web-based nutrition tracking and meal recommendation application designed specifically for college students. It helps users track their daily macronutrient intake, view their hostel mess menus, and discover personalized meal recommendations based on their health and fitness goals.
