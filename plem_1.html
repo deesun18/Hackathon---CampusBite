@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Bite</title>
+
+    <!-- React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel allows JSX in this single HTML file -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fff7ef;
+            color: #222;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================
+           APP
+        ========================= */
+
+        .app {
+            min-height: 100vh;
+        }
+
+        /* =========================
+           AUTH PAGE
+        ========================= */
+
+        .auth-page {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .auth-left {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo-icon {
+            font-size: 70px;
+            margin-bottom: 10px;
+        }
+
+        .auth-left h1 {
+            font-size: 58px;
+            margin: 0;
+        }
+
+        .auth-left p {
+            font-size: 20px;
+            line-height: 1.6;
+            max-width: 520px;
+        }
+
+        .features {
+            margin-top: 25px;
+            display: grid;
+            gap: 14px;
+            font-weight: bold;
+        }
+
+        .auth-right {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .auth-card {
+            background: white;
+            width: 100%;
+            max-width: 520px;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        }
+
+        .auth-card h2 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            height: 45px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 0 13px;
+            outline: none;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px #fff0e5;
+        }
+
+        .primary-button {
+            width: 100%;
+            height: 48px;
+            border: none;
+            border-radius: 11px;
+            background: #f97316;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+
+        .primary-button:hover {
+            background: #ea580c;
+        }
+
+        .switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .switch button {
+            border: none;
+            background: none;
+            color: #f97316;
+            font-weight: bold;
+        }
+
+        .error {
+            background: #fff0f0;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #effdf4;
+            color: #15803d;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        /* =========================
+           DASHBOARD
+        ========================= */
+
+        .dashboard {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #eee;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            font-size: 23px;
+            font-weight: bold;
+            padding: 10px;
+            margin-bottom: 25px;
+        }
+
+        .brand span {
+            color: #f97316;
+        }
+
+        .user-box {
+            background: #fff4eb;
+            padding: 13px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .user-box strong {
+            display: block;
+        }
+
+        .user-box small {
+            color: #f97316;
+            font-weight: bold;
+        }
+
+        .nav {
+            display: grid;
+            gap: 5px;
+        }
+
+        .nav button {
+            border: none;
+            background: transparent;
+            text-align: left;
+            padding: 13px;
+            border-radius: 10px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .nav button:hover,
+        .nav .active {
+            background: #fff0e5;
+            color: #ea580c;
+        }
+
+        .logout {
+            margin-top: auto;
+            border: none;
+            background: #fff0f0;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .content {
+            flex: 1;
+            padding: 45px;
+            overflow-y: auto;
+        }
+
+        .content h1 {
+            margin: 0;
+            font-size: 35px;
+        }
+
+        .muted {
+            color: #888;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .stats {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stat {
+            background: white;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 17px;
+        }
+
+        .stat-icon {
+            font-size: 25px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 28px;
+            margin-top: 10px;
+        }
+
+        .progress {
+            height: 7px;
+            background: #eee;
+            border-radius: 10px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress div {
+            height: 100%;
+            background: #f97316;
+        }
+
+        .section {
+            margin-top: 40px;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .food {
+            background: white;
+            border: 1px solid #eee;
+            padding: 18px;
+            border-radius: 17px;
+        }
+
+        .food-top {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .food h3 {
+            margin: 0;
+        }
+
+        .nutrition {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #777;
+            font-size: 12px;
+            margin: 15px 0;
+        }
+
+        .add {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .add:disabled {
+            background: #ccc;
+        }
+
+        .search {
+            margin-top: 25px;
+            width: 100%;
+            max-width: 400px;
+            height: 45px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 0 15px;
+        }
+
+        .goal-card {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 25px;
+        }
+
+        .goal-card h2 {
+            margin-top: 0;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+            .auth-page {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-left {
+                padding: 45px;
+            }
+
+            .auth-left h1 {
+                font-size: 42px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .dashboard {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .logout {
+                margin-top: 15px;
+            }
+
+            .content {
+                padding: 25px 15px;
+            }
+
+            .stats,
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-card {
+                padding: 25px;
+            }
+        }
+
+        /* =========================
+           WEEKLY MESS MENU
+        ========================= */
+
+        .mess-menu {
+            margin-top: 30px;
+        }
+
+        .mess-header-card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .mess-header-card h2 {
+            margin: 0 0 6px;
+        }
+
+        .day-picker {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(80px, 1fr));
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .day-button {
+            border: 1px solid #eee;
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 11px 6px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .day-button:hover {
+            border-color: #f97316;
+            color: #ea580c;
+        }
+
+        .day-button.active {
+            background: #fff0e5;
+            color: #ea580c;
+            border-color: #f97316;
+        }
+
+        .day-button.today {
+            box-shadow: inset 0 -3px 0 #f97316;
+        }
+
+        .mess-date {
+            margin-top: 25px;
+            background: #222;
+            color: white;
+            border-radius: 18px 18px 0 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .mess-date h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .mess-date p {
+            margin: 6px 0 0;
+            color: #ddd;
+        }
+
+        .meal-card {
+            background: #181818;
+            color: white;
+            border-left: 5px solid #f97316;
+            border-radius: 0 15px 15px 0;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        .meal-card:first-of-type {
+            border-radius: 0 0 15px 15px;
+        }
+
+        .meal-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .meal-card h3 {
+            color: #f97316;
+            margin: 0;
+            font-size: 21px;
+        }
+
+        .meal-time {
+            color: #f59e0b;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .meal-items {
+            margin: 14px 0 0;
+            color: #eee;
+            line-height: 1.65;
+            font-size: 15px;
+        }
+
+        .menu-item {
+            display: inline-block;
+            background: #242424;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 5px 9px;
+            margin: 4px 4px 0 0;
+        }
+
+        .mess-note {
+            margin-top: 15px;
+            color: #888;
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            .day-picker {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .meal-card-top {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .meal-time {
+                font-size: 13px;
+            }
+        }
+
+        .selectable-menu-item {
+            cursor: pointer;
+            user-select: none;
+            transition: 0.15s ease;
+        }
+
+        .selectable-menu-item:hover {
+            border-color: #f97316;
+            transform: translateY(-1px);
+        }
+
+        .selectable-menu-item.selected {
+            background: #fff0e5;
+            border-color: #f97316;
+            color: #ea580c;
+            font-weight: bold;
+        }
+
+        .selection-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 18px;
+            padding: 15px;
+            background: #fff7ef;
+            border-radius: 12px;
+        }
+
+        .selection-bar button {
+            border: none;
+            background: #f97316;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 9px;
+            font-weight: bold;
+        }
+
+        .selection-bar button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .menu-food-card {
+            background: white;
+            border: 1px solid #eee;
+            padding: 18px;
+            border-radius: 17px;
+            cursor: pointer;
+            transition: 0.15s ease;
+        }
+
+        .menu-food-card:hover {
+            border-color: #f97316;
+            transform: translateY(-2px);
+        }
+
+        .menu-food-card.selected {
+            border: 2px solid #f97316;
+            background: #fff7ef;
+        }
+
+        .menu-food-card h3 {
+            margin: 0 0 10px;
+        }
+
+        .meal-label {
+            color: #f97316;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .select-hint {
+            color: #888;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .tracker-log-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .unlog-button {
+            border: 1px solid #e5e5e5;
+            background: #fff;
+            color: #b42318;
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .unlog-button:hover {
+            background: #fff1f0;
+            border-color: #f0b7b2;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+const { useState, useEffect } = React;
+
+/* ==========================================
+   FOOD DATABASE
+========================================== */
+
+const foods = [
+    {
+        id: 1,
+        name: "Chicken Rice",
+        calories: 550,
+        protein: 30,
+        carbs: 65,
+        fat: 18,
+        price: 80,
+        vegetarian: false
+    },
+    {
+        id: 2,
+        name: "Paneer Rice",
+        calories: 520,
+        protein: 22,
+        carbs: 65,
+        fat: 18,
+        price: 75,
+        vegetarian: true
+    },
+    {
+        id: 3,
+        name: "Masala Dosa",
+        calories: 350,
+        protein: 8,
+        carbs: 55,
+        fat: 10,
+        price: 40,
+        vegetarian: true
+    },
+    {
+        id: 4,
+        name: "Egg Rice",
+        calories: 480,
+        protein: 22,
+        carbs: 68,
+        fat: 12,
+        price: 65,
+        vegetarian: false
+    },
+    {
+        id: 5,
+        name: "Chicken Sandwich",
+        calories: 420,
+        protein: 28,
+        carbs: 38,
+        fat: 15,
+        price: 70,
+        vegetarian: false
+    },
+    {
+        id: 6,
+        name: "Veg Sandwich",
+        calories: 320,
+        protein: 12,
+        carbs: 45,
+        fat: 10,
+        price: 50,
+        vegetarian: true
+    },
+    {
+        id: 7,
+        name: "Boiled Eggs",
+        calories: 140,
+        protein: 12,
+        carbs: 1,
+        fat: 10,
+        price: 30,
+        vegetarian: false
+    },
+    {
+        id: 8,
+        name: "Banana",
+        calories: 105,
+        protein: 1,
+        carbs: 27,
+        fat: 0,
+        price: 15,
+        vegetarian: true
+    }
+];
+
+const messMenu = {
+    Sunday: {
+        breakfast: [
+            "Masala Dosa (1)", "Set Dosa (1)", "Chutney-sambar",
+            "Bread", "Butter", "Jam", "Oats", "Tea/coffee",
+            "Milk with Bourn Vita", "Seasonal Fruits"
+        ],
+        lunch: [
+            "Wheat Chapathi*", "Rice (white & boiled)", "Dal Fry",
+            "Tondekai Palya", "Sambhar", "Soyabean Masala",
+            "Curd", "Papad", "Salad", "Sewai Kheer"
+        ],
+        snacks: [
+            "Samosa", "Chutney", "Bread", "Butter", "Jam", "Tea", "Coffee"
+        ],
+        dinner: [
+            "Rice (white & boiled)", "Dal", "Rasam",
+            "Chicken Biryani", "Raitha", "Fruit Custard"
+        ]
+    },
+
+    Monday: {
+        breakfast: [
+            "Idli (3)", "Vada (2)", "Chutney and Sambar", "Bread",
+            "Butter", "Jam", "Cornflakes", "Tea/coffee",
+            "Milk with Bourn Vita", "Boiled Egg (1)"
+        ],
+        lunch: [
+            "Wheat Chapathi*", "Rice (white & boiled)", "Dal Tadka",
+            "Sambar", "Cabbage Dry", "Mixed Pulsed Gravy",
+            "Curd", "Papad", "Salad", "Ice Cream (pista)"
+        ],
+        snacks: [
+            "Vada Pav (2)", "Green Chutney", "Bread",
+            "Butter", "Jam", "Tea", "Coffee"
+        ],
+        dinner: [
+            "Wheat Chapathi", "Rice (white & boiled)", "Lemon Rice",
+            "Veg Masala", "Dal Makhni", "Rasam", "Curd",
+            "Salad", "Chicken Sukka"
+        ]
+    },
+
+    Tuesday: {
+        breakfast: [
+            "Poori (4)", "Bhaji", "Bread", "Butter", "Jam",
+            "Tea/coffee", "Milk with Bourn Vita",
+            "Mix Sprouts (moong, peanuts, grams)", "Boiled Egg (1)"
+        ],
+        lunch: [
+            "Wheat Chapathi*", "Veg Pulao", "Rice (white & boiled)",
+            "Yellow Dal", "Sambhar", "Beetroot Palya",
+            "Rajma Masala", "Raita", "Salad", "Gulab Jamun"
+        ],
+        snacks: [
+            "Veg Sevai Upma", "Bread", "Butter", "Jam", "Tea", "Coffee"
+        ],
+        dinner: [
+            "Wheat Chapathi", "Rice (white & boiled)", "Mixed Pulsed Dry",
+            "Mix Veg Curry", "Dal Fry", "Rasam", "Salad",
+            "Sweet Lassi", "Cut Fruits"
+        ]
+    },
+
+    Wednesday: {
+        breakfast: [
+            "Upma-shira", "Chutney", "Bread", "Butter", "Jam",
+            "Oats", "Tea/coffee", "Milk with Bourn Vita",
+            "Banana", "Boiled Egg (1)"
+        ],
+        lunch: [
+            "Methi Poori", "Rice (white & boiled)", "Sambhar",
+            "Aloo Shimla", "Kabuli Chana Masala", "Dal Fry",
+            "Papad", "Chaas", "Salad", "Ice Cream (chocolate)"
+        ],
+        snacks: [
+            "Veg Cutlet", "Sauce", "Bread", "Butter", "Jam",
+            "Tea", "Coffee"
+        ],
+        dinner: [
+            "Wheat Chapathi", "Rice (white & boiled)", "Tomato Rice",
+            "Aloo Matar Masala", "Rasam", "Curd",
+            "Chicken Kabab/Chilli Chicken", "Salad"
+        ]
+    },
+
+    Thursday: {
+        breakfast: [
+            "Masala Idli", "Medu Vada", "Coconut Chutney", "Sambar",
+            "Bread", "Butter", "Jam", "Cornflakes",
+            "Tea/coffee", "Milk with Bourn Vita", "Boiled Egg (1)"
+        ],
+        lunch: [
+            "Wheat Chapathi", "Rice (white & boiled)", "Dal Tadka",
+            "Sambar", "Beans Poriyal", "Chole Masala",
+            "Curd", "Papad", "Salad", "Rice Payasam"
+        ],
+        snacks: [
+            "Pav Bhaji", "Green Chutney", "Bread", "Butter",
+            "Jam", "Tea", "Coffee"
+        ],
+        dinner: [
+            "Wheat Chapathi", "Rice (white & boiled)", "Jeera Rice",
+            "Paneer Butter Masala", "Dal Fry", "Rasam",
+            "Curd", "Salad", "Chicken 65"
+        ]
+    },
+
+    Friday: {
+        breakfast: [
+            "Poori (4)", "Aloo Bhaji", "Chutney", "Bread",
+            "Butter", "Jam", "Oats", "Tea/coffee",
+            "Milk with Bourn Vita", "Banana", "Boiled Egg (1)"
+        ],
+        lunch: [
+            "Wheat Chapathi*", "Rice (white & boiled)", "Dal Fry",
+            "Sambar", "Gobi Masala", "Rajma Gravy",
+            "Curd", "Papad", "Salad", "Fruit Salad"
+        ],
+        snacks: [
+            "Bread Pakora", "Green Chutney", "Bread", "Butter",
+            "Jam", "Tea", "Coffee"
+        ],
+        dinner: [
+            "Wheat Chapathi", "Rice (white & boiled)", "Veg Pulao",
+            "Aloo Gobi", "Dal Makhni", "Rasam", "Curd",
+            "Salad", "Chicken Curry", "Gulab Jamun"
+        ]
+    },
+
+    Saturday: {
+        breakfast: [
+            "Dosa", "Vada (2)", "Chutney", "Sambar", "Bread",
+            "Butter", "Jam", "Cornflakes", "Tea/coffee",
+            "Milk with Bourn Vita", "Seasonal Fruit"
+        ],
+        lunch: [
+            "Wheat Chapathi", "Rice (white & boiled)", "Dal Fry",
+            "Sambar", "Aloo Beans", "Mixed Veg Gravy",
+            "Curd", "Papad", "Salad", "Ice Cream (vanilla)"
+        ],
+        snacks: [
+            "Bhel Puri", "Green Chutney", "Bread", "Butter",
+            "Jam", "Tea", "Coffee"
+        ],
+        dinner: [
+            "Wheat Chapathi", "Rice (white & boiled)", "Fried Rice",
+            "Veg Manchurian", "Dal Tadka", "Rasam", "Curd",
+            "Salad", "Chicken Biryani", "Raitha"
+        ]
+    }
+};
+
+const messDayOrder = [
+    "Sunday", "Monday", "Tuesday", "Wednesday",
+    "Thursday", "Friday", "Saturday"
+];
+
+/* Approximate nutrition per listed mess serving. Values are estimates. */
+function getMessNutrition(item) {
+    const n = item.toLowerCase();
+
+    if (n.includes("chicken biryani")) return { calories: 520, protein: 28, carbs: 62, fat: 18 };
+    if (n.includes("chicken curry")) return { calories: 260, protein: 25, carbs: 8, fat: 14 };
+    if (n.includes("chicken sukka")) return { calories: 300, protein: 27, carbs: 7, fat: 18 };
+    if (n.includes("chicken 65")) return { calories: 280, protein: 22, carbs: 14, fat: 17 };
+    if (n.includes("chicken kabab") || n.includes("chilli chicken")) return { calories: 260, protein: 24, carbs: 12, fat: 13 };
+
+    if (n.includes("ice cream")) return { calories: 150, protein: 3, carbs: 18, fat: 7 };
+    if (n.includes("gulab jamun")) return { calories: 150, protein: 2, carbs: 25, fat: 5 };
+    if (n.includes("sewai kheer") || n.includes("rice payasam")) return { calories: 180, protein: 4, carbs: 28, fat: 6 };
+    if (n.includes("fruit custard")) return { calories: 160, protein: 4, carbs: 25, fat: 5 };
+    if (n.includes("fruit salad")) return { calories: 100, protein: 1, carbs: 24, fat: 0 };
+
+    if (n.includes("dosa")) return { calories: 170, protein: 4, carbs: 28, fat: 5 };
+    if (n.includes("idli")) return { calories: 65, protein: 2, carbs: 13, fat: 0.5 };
+    if (n.includes("vada")) return { calories: 120, protein: 3, carbs: 15, fat: 6 };
+    if (n.includes("masala dosa")) return { calories: 280, protein: 6, carbs: 42, fat: 9 };
+    if (n.includes("set dosa")) return { calories: 220, protein: 5, carbs: 36, fat: 6 };
+    if (n.includes("poori")) return { calories: 105, protein: 2, carbs: 14, fat: 5 };
+    if (n.includes("methi poori")) return { calories: 115, protein: 2, carbs: 15, fat: 5 };
+    if (n.includes("chapathi")) return { calories: 110, protein: 3, carbs: 18, fat: 3 };
+    if (n.includes("bread")) return { calories: 70, protein: 3, carbs: 13, fat: 1 };
+    if (n.includes("butter")) return { calories: 50, protein: 0, carbs: 0, fat: 6 };
+    if (n.includes("jam")) return { calories: 45, protein: 0, carbs: 11, fat: 0 };
+    if (n.includes("cornflakes")) return { calories: 120, protein: 2, carbs: 27, fat: 0.5 };
+    if (n.includes("oats")) return { calories: 150, protein: 5, carbs: 27, fat: 3 };
+    if (n.includes("bourn vita")) return { calories: 130, protein: 5, carbs: 18, fat: 4 };
+    if (n.includes("milk")) return { calories: 120, protein: 6, carbs: 9, fat: 6 };
+    if (n.includes("boiled egg")) return { calories: 75, protein: 6, carbs: 1, fat: 5 };
+    if (n.includes("banana")) return { calories: 90, protein: 1, carbs: 23, fat: 0 };
+    if (n.includes("seasonal fruit") || n.includes("cut fruits")) return { calories: 80, protein: 1, carbs: 20, fat: 0 };
+    if (n.includes("mix sprouts")) return { calories: 130, protein: 8, carbs: 18, fat: 3 };
+
+    if (n.includes("rice")) return { calories: 210, protein: 4, carbs: 46, fat: 0.5 };
+    if (n.includes("lemon rice")) return { calories: 250, protein: 5, carbs: 43, fat: 7 };
+    if (n.includes("tomato rice")) return { calories: 240, protein: 5, carbs: 43, fat: 6 };
+    if (n.includes("jeera rice")) return { calories: 230, protein: 4, carbs: 44, fat: 5 };
+    if (n.includes("fried rice")) return { calories: 300, protein: 6, carbs: 45, fat: 10 };
+    if (n.includes("veg pulao")) return { calories: 260, protein: 5, carbs: 43, fat: 7 };
+
+    if (n.includes("dal")) return { calories: 150, protein: 8, carbs: 20, fat: 4 };
+    if (n.includes("sambar")) return { calories: 100, protein: 5, carbs: 15, fat: 2 };
+    if (n.includes("rasam")) return { calories: 50, protein: 2, carbs: 7, fat: 1 };
+    if (n.includes("chole") || n.includes("kabuli chana")) return { calories: 190, protein: 9, carbs: 28, fat: 5 };
+    if (n.includes("rajma")) return { calories: 180, protein: 9, carbs: 27, fat: 4 };
+    if (n.includes("soyabean")) return { calories: 180, protein: 14, carbs: 12, fat: 8 };
+    if (n.includes("paneer butter masala")) return { calories: 300, protein: 12, carbs: 12, fat: 22 };
+    if (n.includes("dal makhni")) return { calories: 190, protein: 8, carbs: 20, fat: 9 };
+    if (n.includes("mixed pulsed")) return { calories: 170, protein: 9, carbs: 23, fat: 4 };
+
+    if (n.includes("curd")) return { calories: 80, protein: 4, carbs: 6, fat: 4 };
+    if (n.includes("raita")) return { calories: 70, protein: 3, carbs: 6, fat: 3 };
+    if (n.includes("chaas")) return { calories: 45, protein: 2, carbs: 4, fat: 2 };
+    if (n.includes("lassi")) return { calories: 130, protein: 4, carbs: 20, fat: 4 };
+    if (n.includes("salad")) return { calories: 50, protein: 2, carbs: 10, fat: 0 };
+    if (n.includes("papad")) return { calories: 45, protein: 2, carbs: 5, fat: 2 };
+    if (n.includes("chutney")) return { calories: 45, protein: 1, carbs: 5, fat: 3 };
+    if (n.includes("sauce")) return { calories: 25, protein: 0, carbs: 6, fat: 0 };
+
+    if (n.includes("samosa")) return { calories: 150, protein: 3, carbs: 18, fat: 7 };
+    if (n.includes("vada pav")) return { calories: 220, protein: 5, carbs: 32, fat: 8 };
+    if (n.includes("cutlet")) return { calories: 140, protein: 3, carbs: 18, fat: 6 };
+    if (n.includes("sevai upma") || n.includes("upma-shira")) return { calories: 220, protein: 6, carbs: 35, fat: 7 };
+    if (n.includes("pav bhaji")) return { calories: 300, protein: 7, carbs: 45, fat: 10 };
+    if (n.includes("bhel puri")) return { calories: 220, protein: 6, carbs: 35, fat: 6 };
+    if (n.includes("bread pakora")) return { calories: 190, protein: 5, carbs: 25, fat: 8 };
+
+    if (n.includes("aloo") || n.includes("potato")) return { calories: 140, protein: 3, carbs: 22, fat: 5 };
+    if (n.includes("cabbage") || n.includes("beans") || n.includes("beetroot") || n.includes("palya")) return { calories: 90, protein: 3, carbs: 12, fat: 3 };
+    if (n.includes("veg masala") || n.includes("veg curry") || n.includes("mixed veg")) return { calories: 140, protein: 4, carbs: 14, fat: 7 };
+    if (n.includes("manchurian")) return { calories: 230, protein: 6, carbs: 25, fat: 12 };
+    if (n.includes("green chutney")) return { calories: 20, protein: 1, carbs: 3, fat: 0.5 };
+    if (n.includes("tea") || n.includes("coffee")) return { calories: 60, protein: 2, carbs: 8, fat: 2 };
+
+    return { calories: 100, protein: 3, carbs: 15, fat: 3 };
+}
+
+const mealLabels = {
+    breakfast: { title: "Breakfast", time: "07:30–09:30" },
+    lunch: { title: "Lunch", time: "12:00–14:00" },
+    snacks: { title: "Snacks", time: "16:30–18:00" },
+    dinner: { title: "Dinner", time: "19:30–21:30" }
+};
+
+/* ==========================================
+   APP
+========================================== */
+
+function App() {
+    const [page, setPage] = useState("login");
+
+    const [user, setUser] = useState(
+        JSON.parse(localStorage.getItem("campusBiteUser"))
+    );
+
+    const [meals, setMeals] = useState(
+        JSON.parse(localStorage.getItem("campusBiteMeals")) || []
+    );
+
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem("campusBiteUser", JSON.stringify(user));
+        }
+    }, [user]);
+
+    useEffect(() => {
+        localStorage.setItem("campusBiteMeals", JSON.stringify(meals));
+    }, [meals]);
+
+    function login(username, password) {
+        const savedUser = JSON.parse(localStorage.getItem("campusBiteAccount"));
+
+        if (!savedUser) {
+            return "No account exists. Please register first.";
+        }
+
+        if (
+            savedUser.username !== username ||
+            savedUser.password !== password
+        ) {
+            return "Incorrect username or password.";
+        }
+
+        setUser(savedUser);
+        setPage("dashboard");
+        return null;
+    }
+
+    function register(account) {
+        localStorage.setItem("campusBiteAccount", JSON.stringify(account));
+        setUser(account);
+        setPage("dashboard");
+    }
+
+    function logout() {
+        setUser(null);
+        setPage("login");
+    }
+
+    function addMeal(food) {
+        setMeals([
+            ...meals,
+            {
+                ...food,
+                logId: `${food.id || "food"}-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+                time: new Date().toLocaleTimeString()
+            }
+        ]);
+    }
+
+    function removeMeal(logId) {
+        setMeals(current => current.filter(meal => meal.logId !== logId));
+    }
+
+    if (!user) {
+        if (page === "register") {
+            return (
+                <Register
+                    register={register}
+                    goLogin={() => setPage("login")}
+                />
+            );
+        }
+
+        return (
+            <Login
+                login={login}
+                goRegister={() => setPage("register")}
+            />
+        );
+    }
+
+    return (
+        <Dashboard
+            user={user}
+            logout={logout}
+            meals={meals}
+            addMeal={addMeal}
+            removeMeal={removeMeal}
+        />
+    );
+}
+
+/* ==========================================
+   LOGIN
+========================================== */
+
+function Login({ login, goRegister }) {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+
+    function submit(e) {
+        e.preventDefault();
+        const result = login(username, password);
+        if (result) {
+            setError(result);
+        }
+    }
+
+    return (
+        <div className="auth-page">
+            <div className="auth-left">
+                <div className="logo-icon">🍊</div>
+                <h1>Campus Bite</h1>
+                <p>
+                    Smart campus food recommendations designed around your nutrition goals.
+                </p>
+                <div className="features">
+                    <div>✓ Personalized food recommendations</div>
+                    <div>✓ Calorie & protein tracking</div>
+                    <div>✓ Bulk, cut & maintain goals</div>
+                    <div>✓ Student-friendly food options</div>
+                </div>
+            </div>
+
+            <div className="auth-right">
+                <form className="auth-card" onSubmit={submit}>
+                    <h2>Welcome back 👋</h2>
+                    <p className="subtitle">Login to your Campus Bite account.</p>
+
+                    {error && <div className="error">{error}</div>}
+
+                    <div className="field">
+                        <label>Username</label>
+                        <input
+                            value={username}
+                            onChange={e => setUsername(e.target.value)}
+                            placeholder="Enter username"
+                            required
+                        />
+                    </div>
+
+                    <div className="field">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            placeholder="Enter password"
+                            required
+                        />
+                    </div>
+
+                    <button className="primary-button">Login →</button>
+
+                    <div className="switch">
+                        Don't have an account?
+                        <button type="button" onClick={goRegister}>
+                            Create Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
+
+/* ==========================================
+   REGISTER
+========================================== */
+
+function Register({ register, goLogin }) {
+    const [form, setForm] = useState({
+        username: "",
+        password: "",
+        name: "",
+        age: "",
+        gender: "Male",
+        height: "",
+        weight: "",
+        goal: "Maintain",
+        diet: "No Preference",
+        calories: 2500,
+        protein: 120,
+        carbs: 300,
+        fat: 70,
+        budget: 300
+    });
+
+    function update(field, value) {
+        setForm({
+            ...form,
+            [field]: value
+        });
+    }
+
+    function submit(e) {
+        e.preventDefault();
+        const existing = localStorage.getItem("campusBiteAccount");
+
+        if (existing) {
+            alert("An account already exists on this browser.");
+            return;
+        }
+
+        register(form);
+    }
+
+    return (
+        <div className="auth-page">
+            <div className="auth-left">
+                <div className="logo-icon">🍊</div>
+                <h1>Campus Bite</h1>
+                <p>
+                    Create your profile and let Campus Bite personalize your food recommendations.
+                </p>
+                <div className="features">
+                    <div>✓ Save your nutrition profile</div>
+                    <div>✓ Track calories</div>
+                    <div>✓ Get goal-based food suggestions</div>
+                    <div>✓ Track your daily nutrition</div>
+                </div>
+            </div>
+
+            <div className="auth-right">
+                <form className="auth-card" onSubmit={submit}>
+                    <h2>Create Account</h2>
+                    <p className="subtitle">Tell us about yourself.</p>
+
+                    <div className="form-grid">
+                        <div className="field">
+                            <label>Username</label>
+                            <input
+                                value={form.username}
+                                onChange={e => update("username", e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Password</label>
+                            <input
+                                type="password"
+                                value={form.password}
+                                onChange={e => update("password", e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Name</label>
+                            <input
+                                value={form.name}
+                                onChange={e => update("name", e.target.value)}
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Age</label>
+                            <input
+                                type="number"
+                                value={form.age}
+                                onChange={e => update("age", e.target.value)}
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Gender</label>
+                            <select
+                                value={form.gender}
+                                onChange={e => update("gender", e.target.value)}
+                            >
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select>
+                        </div>
+
+                        <div className="field">
+                            <label>Height (cm)</label>
+                            <input
+                                type="number"
+                                value={form.height}
+                                onChange={e => update("height", e.target.value)}
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Weight (kg)</label>
+                            <input
+                                type="number"
+                                value={form.weight}
+                                onChange={e => update("weight", e.target.value)}
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Goal</label>
+                            <select
+                                value={form.goal}
+                                onChange={e => update("goal", e.target.value)}
+                            >
+                                <option>Bulk</option>
+                                <option>Maintain</option>
+                                <option>Cut</option>
+                            </select>
+                        </div>
+
+                        <div className="field">
+                            <label>Diet</label>
+                            <select
+                                value={form.diet}
+                                onChange={e => update("diet", e.target.value)}
+                            >
+                                <option>No Preference</option>
+                                <option>Vegetarian</option>
+                            </select>
+                        </div>
+
+                        <div className="field">
+                            <label>Calories / day</label>
+                            <input
+                                type="number"
+                                value={form.calories}
+                                onChange={e => update("calories", e.target.value)}
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Protein / day (g)</label>
+                            <input
+                                type="number"
+                                value={form.protein}
+                                onChange={e => update("protein", e.target.value)}
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Carbs / day (g)</label>
+                            <input
+                                type="number"
+                                value={form.carbs}
+                                onChange={e => update("carbs", e.target.value)}
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Fat / day (g)</label>
+                            <input
+                                type="number"
+                                value={form.fat}
+                                onChange={e => update("fat", e.target.value)}
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Daily budget ₹</label>
+                            <input
+                                type="number"
+                                value={form.budget}
+                                onChange={e => update("budget", e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <button className="primary-button">Create Account →</button>
+
+                    <div className="switch">
+                        Already have an account?
+                        <button type="button" onClick={goLogin}>
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
+
+/* ==========================================
+   DASHBOARD
+========================================== */
+
+function Dashboard({ user, logout, meals, addMeal, removeMeal }) {
+    const [section, setSection] = useState("home");
+    const [geminiResponse, setGeminiResponse] = useState("");
+    const [loadingAi, setLoadingAi] = useState(false);
+    const [nightCanteenMenu, setNightCanteenMenu] = useState([]);
+
+    useEffect(() => {
+        async function fetchNightCanteenMenu() {
+            try {
+                const response = await fetch("http://localhost:5000/api/night-canteen-menu");
+                const data = await response.json();
+                setNightCanteenMenu(data);
+            } catch (error) {
+                console.error("Could not fetch canteen menu:", error);
+            }
+        }
+        fetchNightCanteenMenu();
+    }, []);
+
+    const totalCalories = meals.reduce((sum, food) => sum + Number(food.calories), 0);
+    const totalProtein = meals.reduce((sum, food) => sum + Number(food.protein), 0);
+
+    const todayName = messDayOrder[new Date().getDay()];
+
+    const recommendations = Object.keys(mealLabels).flatMap(mealKey =>
+        messMenu[todayName][mealKey].map((item, index) => ({
+            id: `recommend-${todayName}-${mealKey}-${index}`,
+            name: item,
+            ...getMessNutrition(item),
+            vegetarian: true,
+            messItem: true,
+            meal: mealKey,
+            nutritionAvailable: false
+        }))
+    );
+
+    async function askGemini() {
+        setLoadingAi(true);
+        setGeminiResponse("");
+
+        const remCalories = Number(user.calories) - totalCalories;
+        const remProtein = Number(user.protein) - totalProtein;
+
+        const requestText =
+            `I have about ${remCalories} calories and ${remProtein}g of protein left for today. ` +
+            `My goal is ${user.goal}, and my dietary preference is ${user.diet || "no preference"}. ` +
+            `Recommend items from the Night Canteen menu that fit.`;
+
+        try {
+            const response = await fetch("http://localhost:5000/api/recommend", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    request: requestText
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setGeminiResponse(`Error: ${data.error || "Failed to fetch AI response"}`);
+            } else {
+                setGeminiResponse(data.recommendation);
+            }
+        } catch (error) {
+            console.error("Gemini API Request Failed:", error);
+            setGeminiResponse("Failed to connect to the backend server.");
+        } finally {
+            setLoadingAi(false);
+        }
+    }
+
+    return (
+        <div className="dashboard">
+            <aside className="sidebar">
+                <div className="brand">
+                    🍊 Campus <span>Bite</span>
+                </div>
+
+                <div className="user-box">
+                    <strong>{user.name || user.username}</strong>
+                    <small>🎯 {user.goal}</small>
+                </div>
+
+                <div className="nav">
+                    <button
+                        className={section === "home" ? "active" : ""}
+                        onClick={() => setSection("home")}
+                    >
+                        🏠 Dashboard
+                    </button>
+
+                    <button
+                        className={section === "menu" ? "active" : ""}
+                        onClick={() => setSection("menu")}
+                    >
+                        🍱 Food Menu
+                    </button>
+
+                    <button
+                        className={section === "mess" ? "active" : ""}
+                        onClick={() => setSection("mess")}
+                    >
+                        🍽️ Mess Menu
+                    </button>
+
+                    <button
+                        className={section === "recommend" ? "active" : ""}
+                        onClick={() => setSection("recommend")}
+                    >
+                        ⚡ Recommendations
+                    </button>
+
+                    <button
+                        className={section === "tracker" ? "active" : ""}
+                        onClick={() => setSection("tracker")}
+                    >
+                        📊 Tracker
+                    </button>
+                </div>
+
+                <button className="logout" onClick={logout}>
+                    Logout
+                </button>
+            </aside>
+
+            <main className="content">
+                {section === "home" && (
+                    <>
+                        <h1>Welcome back, {user.name || "Student"} 👋</h1>
+                        <p className="muted">Here's your nutrition overview.</p>
+
+                        <div className="stats">
+                            <Stat
+                                icon="🔥"
+                                title="Calories"
+                                value={totalCalories}
+                                target={user.calories}
+                            />
+                            <Stat
+                                icon="💪"
+                                title="Protein"
+                                value={totalProtein}
+                                target={user.protein}
+                            />
+                            <Stat
+                                icon="🎯"
+                                title="Goal"
+                                value={user.goal}
+                                target=""
+                            />
+                            <Stat
+                                icon="💰"
+                                title="Budget"
+                                value={"₹" + user.budget}
+                                target=""
+                            />
+                        </div>
+
+                        <div className="goal-card">
+                            <h2>⚡ Your goal: {user.goal}</h2>
+                            <p>
+                                Campus Bite will prioritize foods that fit your selected nutrition goal.
+                            </p>
+                        </div>
+
+                        <div className="section">
+                            <h2>Recommended for you</h2>
+                            <div className="food-grid">
+                                {recommendations.slice(0, 4).map(food => (
+                                    <FoodCard
+                                        key={food.id}
+                                        food={food}
+                                        addMeal={addMeal}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                )}
+
+                {section === "menu" && <MessFoodMenu addMeal={addMeal} />}
+
+                {section === "recommend" && (
+                    <>
+                        <h1>Smart Recommendations ⚡</h1>
+                        <p className="muted">
+                            Recommendations based on your goal, diet and nutrition targets.
+                        </p>
+
+                        <div
+                            className="goal-card"
+                            style={{ background: "linear-gradient(135deg, #3b82f6, #60a5fa)" }}
+                        >
+                            <h2>🤖 Ask Gemini AI</h2>
+                            <p>
+                                Get a personalized recommendation for today's menu using Google Gemini.
+                            </p>
+                            <button
+                                className="primary-button"
+                                style={{
+                                    width: "auto",
+                                    padding: "0 20px",
+                                    background: "#1d4ed8",
+                                    marginTop: "10px"
+                                }}
+                                onClick={askGemini}
+                                disabled={loadingAi}
+                            >
+                                {loadingAi ? "Thinking..." : "Generate AI Recommendation"}
+                            </button>
+                            {geminiResponse && (
+                                <div
+                                    style={{
+                                        marginTop: "20px",
+                                        background: "white",
+                                        color: "#222",
+                                        padding: "15px",
+                                        borderRadius: "10px",
+                                        fontSize: "14px"
+                                    }}
+                                >
+                                    <h3 style={{ marginTop: 0, color: "#1d4ed8" }}>AI Advice:</h3>
+                                    <pre style={{ whiteSpace: "pre-wrap", margin: 0 }}>
+                                        {geminiResponse}
+                                    </pre>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="goal-card">
+                            <h2>
+                                {user.goal === "Bulk"
+                                    ? "💪 Bulk"
+                                    : user.goal === "Cut"
+                                    ? "🔥 Cut"
+                                    : "⚖️ Maintain"}
+                            </h2>
+                            <p>
+                                This system scores foods according to your nutritional requirements.
+                            </p>
+                        </div>
+
+                        <p className="mess-note">
+                            Nutrition values for the mess menu were estimated.
+                        </p>
+
+                        <div className="food-grid">
+                            {recommendations.map(food => (
+                                <FoodCard
+                                    key={food.id}
+                                    food={food}
+                                    addMeal={addMeal}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
+
+                {section === "mess" && <MessMenu addMeal={addMeal} />}
+
+                {section === "tracker" && (
+                    <>
+                        <h1>Nutrition Tracker 📊</h1>
+                        <p className="muted">Today's logged food.</p>
+
+                        <div className="stats">
+                            <Stat
+                                icon="🔥"
+                                title="Calories"
+                                value={totalCalories}
+                                target={user.calories}
+                            />
+                            <Stat
+                                icon="💪"
+                                title="Protein"
+                                value={totalProtein}
+                                target={user.protein}
+                            />
+                        </div>
+
+                        <div className="section">
+                            {meals.length === 0 ? (
+                                <p className="muted">
+                                    No meals logged yet. Add food from the menu.
+                                </p>
+                            ) : (
+                                meals.map(meal => (
+                                    <div
+                                        key={meal.logId}
+                                        className="food"
+                                        style={{ marginBottom: "10px" }}
+                                    >
+                                        <strong>{meal.name}</strong>
+
+                                        <div className="nutrition">
+                                            {meal.nutritionAvailable === false ? (
+                                                <span className="muted">
+                                                    Nutrition data not provided
+                                                </span>
+                                            ) : (
+                                                <>
+                                                    <span>🔥 {meal.calories} kcal</span>
+                                                    <span>💪 {meal.protein}g protein</span>
+                                                    <span>🍚 {meal.carbs}g carbs</span>
+                                                </>
+                                            )}
+                                        </div>
+
+                                        <div className="tracker-log-row">
+                                            <span className="muted">
+                                                Logged at {meal.time}
+                                            </span>
+                                            <button
+                                                className="unlog-button"
+                                                onClick={() => removeMeal(meal.logId)}
+                                            >
+                                                ↩ Unlog
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </>
+                )}
+            </main>
+        </div>
+    );
+}
+
+/* ==========================================
+   MESS MENU
+========================================== */
+
+function getWeekDate(dayName) {
+    const today = new Date();
+    const currentDay = today.getDay();
+    const targetDay = messDayOrder.indexOf(dayName);
+    const date = new Date(today);
+
+    date.setDate(today.getDate() + (targetDay - currentDay));
+    return date;
+}
+
+function formatMessDate(date) {
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+}
+
+function MessMenu({ addMeal }) {
+    const todayName = messDayOrder[new Date().getDay()];
+    const [selectedDay, setSelectedDay] = useState(todayName);
+    const [selectedItems, setSelectedItems] = useState([]);
+
+    const menu = messMenu[selectedDay];
+    const selectedDate = getWeekDate(selectedDay);
+
+    function toggleItem(item, meal) {
+        const key = `${meal}-${item}`;
+        setSelectedItems(current =>
+            current.includes(key)
+                ? current.filter(x => x !== key)
+                : [...current, key]
+        );
+    }
+
+    function selectItemsForTracker() {
+        selectedItems.forEach(key => {
+            const separator = key.indexOf("-");
+            const meal = key.slice(0, separator);
+            const item = key.slice(separator + 1);
+
+            addMeal({
+                id: `mess-${selectedDay}-${meal}-${item}-${Date.now()}`,
+                name: item,
+                ...getMessNutrition(item),
+                vegetarian: true,
+                messItem: true,
+                meal: meal,
+                nutritionAvailable: true
+            });
+        });
+
+        setSelectedItems([]);
+    }
+
+    function changeDay(day) {
+        setSelectedDay(day);
+        setSelectedItems([]);
+    }
+
+    return (
+        <>
+            <h1>Mess Menu 🍽️</h1>
+            <p className="muted">Select a day, then select the mess food you want.</p>
+
+            <div className="mess-header-card">
+                <h2>Weekly Hostel Mess Menu</h2>
+                <p className="muted">Select individual food items from any meal.</p>
+
+                <div className="day-picker">
+                    {messDayOrder.map(day => (
+                        <button
+                            key={day}
+                            className={
+                                "day-button " +
+                                (selectedDay === day ? "active " : "") +
+                                (todayName === day ? "today" : "")
+                            }
+                            onClick={() => changeDay(day)}
+                        >
+                            {day.slice(0, 3)}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="mess-menu">
+                <div className="mess-date">
+                    <h2>{selectedDay}</h2>
+                    <p>{formatMessDate(selectedDate)}</p>
+                </div>
+
+                {Object.keys(mealLabels).map(mealKey => (
+                    <div className="meal-card" key={mealKey}>
+                        <div className="meal-card-top">
+                            <h3>{mealLabels[mealKey].title}</h3>
+                            <span className="meal-time">{mealLabels[mealKey].time}</span>
+                        </div>
+
+                        <div className="meal-items">
+                            {menu[mealKey].map((item, index) => {
+                                const key = `${mealKey}-${item}`;
+
+                                return (
+                                    <span
+                                        className={
+                                            "menu-item selectable-menu-item " +
+                                            (selectedItems.includes(key) ? "selected" : "")
+                                        }
+                                        key={index}
+                                        onClick={() => toggleItem(item, mealKey)}
+                                    >
+                                        {selectedItems.includes(key) ? "✓ " : ""}
+                                        {item}
+                                    </span>
+                                );
+                            })}
+                        </div>
+                    </div>
+                ))}
+
+                <div className="selection-bar">
+                    <span>
+                        <strong>{selectedItems.length}</strong> item(s) selected
+                    </span>
+
+                    <button
+                        onClick={selectItemsForTracker}
+                        disabled={selectedItems.length === 0}
+                    >
+                        Add Selected to Tracker
+                    </button>
+                </div>
+            </div>
+        </>
+    );
+}
+
+/* ==========================================
+   MESS FOOD MENU
+========================================== */
+
+function MessFoodMenu({ addMeal }) {
+    const todayName = messDayOrder[new Date().getDay()];
+    const menu = messMenu[todayName];
+    const [selected, setSelected] = useState([]);
+
+    const allItems = Object.keys(mealLabels).flatMap(mealKey =>
+        menu[mealKey].map((item, index) => ({
+            id: `${mealKey}-${index}-${item}`,
+            name: item,
+            meal: mealKey
+        }))
+    );
+
+    function selectFood(item) {
+        if (selected.includes(item.id)) return;
+
+        addMeal({
+            id: `mess-food-${item.id}-${Date.now()}`,
+            ...getMessNutrition(item.name),
+            vegetarian: true,
+            messItem: true,
+            meal: item.meal,
+            nutritionAvailable: true
+        });
+
+        setSelected(current => [...current, item.id]);
+    }
+
+    return (
+        <>
+            <h1>Food Menu 🍱</h1>
+            <p className="muted">
+                Today's hostel mess food — {todayName}. Click a food item to add it to your tracker.
+            </p>
+
+            <div className="food-grid">
+                {allItems.map(item => (
+                    <div
+                        key={item.id}
+                        className={
+                            "menu-food-card " +
+                            (selected.includes(item.id) ? "selected" : "")
+                        }
+                        onClick={() => selectFood(item)}
+                    >
+                        <div className="meal-label">{mealLabels[item.meal].title}</div>
+                        <h3>
+                            {selected.includes(item.id) ? "✓ " : ""}
+                            {item.name}
+                        </h3>
+                        <div className="select-hint">
+                            {selected.includes(item.id)
+                                ? "Added to tracker"
+                                : "Click to add to tracker"}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </>
+    );
+}
+
+/* ==========================================
+   STAT
+========================================== */
+
+function Stat({ icon, title, value, target }) {
+    let percent = 0;
+
+    if (target && !isNaN(Number(value))) {
+        percent = Math.min((Number(value) / Number(target)) * 100, 100);
+    }
+
+    return (
+        <div className="stat">
+            <div className="stat-icon">{icon}</div>
+            <div className="muted">{title}</div>
+            <strong>{value}</strong>
+
+            {target && (
+                <>
+                    <div className="progress">
+                        <div style={{ width: percent + "%" }} />
+                    </div>
+                    <small className="muted">Target: {target}</small>
+                </>
+            )}
+        </div>
+    );
+}
+
+/* ==========================================
+   FOOD CARD
+========================================== */
+
+function FoodCard({ food, addMeal }) {
+    return (
+        <div className="food">
+            <div className="food-top">
+                <div>
+                    <h3>
+                        {food.vegetarian ? "🥗" : "🍗"} {food.name}
+                    </h3>
+                </div>
+            </div>
+
+            <div className="nutrition">
+                <span>🔥 {food.calories} kcal</span>
+                <span>💪 {food.protein}g</span>
+                <span>🍚 {food.carbs}g</span>
+                <span>🥑 {food.fat}g</span>
+            </div>
+
+            <button className="add" onClick={() => addMeal(food)}>
+                + Add to Tracker
+            </button>
+        </div>
+    );
+}
+
+/* ==========================================
+   START REACT
+========================================== */
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+
+</body>
+</html>
